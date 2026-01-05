@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, User, UserPlus } from "lucide-react";
+import authService from "../services/auth.service";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -9,7 +10,7 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -17,23 +18,26 @@ export default function Register() {
       return;
     }
 
-    console.log({ name, email, password });
-    navigate("/login"); 
+    try {
+      await authService.register({ name, email, password, confirmPassword });
+      navigate("/dashboard");
+    } catch (err) {
+      alert(
+        err.response?.data?.message || "Registration failed. Please try again."
+      );
+      console.log(err.response?.data || err);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold text-gray-800">Create account</h2>
-          <p className="text-gray-500 mt-1">
-            Start managing your tasks today
-          </p>
+          <p className="text-gray-500 mt-1">Start managing your tasks today</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Name

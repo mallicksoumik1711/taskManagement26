@@ -1,12 +1,27 @@
-import TaskColumn from './TaskColumn';
-import { mockTasks } from '../utils/mockTasks';
 
-export default function TaskBoard() {
+import TaskColumn from './TaskColumn';
+
+export default function TaskBoard({ tasks, onEditTask, onDeleteTask }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 h-full min-h-0">
-      <TaskColumn title="Pending" tasks={mockTasks.slice(0, 5)} />
-      <TaskColumn title="In progress" tasks={mockTasks.slice(5, 10)} />
-      <TaskColumn title="Completed" tasks={mockTasks.slice(10, 15)} />
+      <TaskColumn
+        title="Pending"
+        tasks={tasks.filter((t) => t.status === "Pending")}
+        onEdit={onEditTask}
+        onDelete={onDeleteTask}
+      />
+      <TaskColumn
+        title="In Progress"
+        tasks={tasks.filter((t) => t.status === "In Progress")}
+        onEdit={onEditTask}
+        onDelete={onDeleteTask}
+      />
+      <TaskColumn
+        title="Completed"
+        tasks={tasks.filter((t) => t.status === "Completed")}
+        onEdit={onEditTask}
+        onDelete={onDeleteTask}
+      />
     </div>
   );
 }
